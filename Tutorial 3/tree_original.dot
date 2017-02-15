@@ -1,0 +1,28 @@
+// Created by rbtree.write_dot()
+digraph red_black_tree {
+  N139640555099704 [label="[15, 20], color: BLACK, max: 40", color="BLACK"];
+  N139640555099776 [label="[10, 30], color: BLACK, max: 30", color="BLACK"];
+  N139640555099920 [label="[5, 20], color: RED, max: 20", color="RED"];
+  N139640555100208 [label="Sentinel empty node", color="BLACK"];
+  N139640555099920 -> N139640555100208 ;
+  N139640555100208 [label="Sentinel empty node", color="BLACK"];
+  N139640555099920 -> N139640555100208 ;
+  N139640555099776 -> N139640555099920 ;
+  N139640555099992 [label="[12, 15], color: RED, max: 15", color="RED"];
+  N139640555100208 [label="Sentinel empty node", color="BLACK"];
+  N139640555099992 -> N139640555100208 ;
+  N139640555100208 [label="Sentinel empty node", color="BLACK"];
+  N139640555099992 -> N139640555100208 ;
+  N139640555099776 -> N139640555099992 ;
+  N139640555099704 -> N139640555099776 ;
+  N139640555099848 [label="[17, 19], color: BLACK, max: 40", color="BLACK"];
+  N139640555100208 [label="Sentinel empty node", color="BLACK"];
+  N139640555099848 -> N139640555100208 ;
+  N139640555100064 [label="[30, 40], color: RED, max: 40", color="RED"];
+  N139640555100208 [label="Sentinel empty node", color="BLACK"];
+  N139640555100064 -> N139640555100208 ;
+  N139640555100208 [label="Sentinel empty node", color="BLACK"];
+  N139640555100064 -> N139640555100208 ;
+  N139640555099848 -> N139640555100064 ;
+  N139640555099704 -> N139640555099848 ;
+}

@@ -82,11 +82,41 @@ class IntervalTree:
     def transplant(self, u, v):
         if u.p is self.nil:
             self.root = v
+            v.p = u.p
+            return
         elif u == u.p.left:
             u.p.left = v
         else:
             u.p.right = v
+        # Change max of v's new parent
+        ans = u.p.hi
+        if u.p.left is not self.nil:
+            ans = ans if u.p.left.max < ans else u.p.left.max
+        if u.p.right is not self.nil:
+            ans = ans if u.p.right.max < ans else u.p.right.max
+        u.p.max = ans
+        # Change max of v's original parent
+        ans = v.p.hi
+        if v.p.left is not self.nil:
+            ans = ans if v.p.left.max < ans else v.p.left.max
+        if v.p.right is not self.nil:
+            ans = ans if v.p.right.max < ans else v.p.right.max
+        v.p.max = ans
         v.p = u.p
+
+    def searchNode(self, key):
+        x = self.root
+        while x != self.nil and key != x.key:
+            if key < x.key:
+                x = x.left
+            else:
+                x = x.right
+        return x
+
+    def treeMinimum(self, z):
+        while z.left is not self.nil:
+            z = z.left
+        return z
 
     def deleteNode(self, z):
         y = z
@@ -114,7 +144,7 @@ class IntervalTree:
         if y_original_color == BLACK:
             self.deleteFixup(x)
 
-    def deleteFixup(x):
+    def deleteFixup(self, x):
         while x != self.root and x.color == BLACK:
             if x == x.p.left:
                 w = x.p.right
@@ -268,13 +298,7 @@ def write_tree_as_dot(t, f, show_nil=False):
     print >> f, "}"
 
 if __name__ == "__main__":
-    intervals = [Node(15, 20), Node(10, 30), Node(17, 19), Node(5, 20), Node(12, 15), Node(30, 40)]
-    t = IntervalTree(intervals)
-    printTree(t.root)
-    t.intervalSearch(Node(10, 15))
-    t.insertNode(Node(13, 15))
-    t.insertNode(Node(7, 10))
-    t.intervalSearch(Node(13, 14))
+    # Tree to file
     import os, sys
     def write_tree(t, filename):
         "Write the tree as an SVG file."
@@ -282,4 +306,13 @@ if __name__ == "__main__":
         write_tree_as_dot(t, f, True)
         f.close()
         os.system('dot %s.dot -Tsvg -o %s.svg' % (filename, filename))
-    write_tree(t, 'tree')
+    # Test
+    intervals = [Node(15, 20), Node(10, 30), Node(17, 19), Node(5, 20), Node(12, 15), Node(30, 40)]
+    t = IntervalTree(intervals)
+    write_tree(t, 'tree_original')
+    t.intervalSearch(Node(10, 15))
+    t.deleteNode(t.searchNode(15))
+    t.insertNode(Node(13, 15))
+    t.insertNode(Node(7, 10))
+    t.intervalSearch(Node(13, 14))
+    write_tree(t, 'tree_after_deletion')
