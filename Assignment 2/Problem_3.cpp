@@ -34,7 +34,7 @@ int main() {
         }
         sort(s.begin(),s.end());
         int ans = 0;
-        for(int i = 0; i < min(36, n); i++) {
+        for(int i = 0; i < min(37, n); i++) {
             ans = max(ans, lisc(s[i].second, n, a));
         }
         cout << ans << "\n";
