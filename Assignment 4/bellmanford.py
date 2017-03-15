@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import random
+import timeit
 
 MAX = float('Inf')
 
@@ -41,6 +42,7 @@ def ret_random_graph(v, e, weight, neg=True):
     return Graph(V, E)
 
 def bellman_ford(g, source=0):
+    start_time = timeit.default_timer()
     dist = [0 for i in range(len(g.nodes))]
     has_cycle = False
 
@@ -52,12 +54,11 @@ def bellman_ford(g, source=0):
             if dist[edge.u] + edge.weight < dist[edge.v]:
                 dist[edge.v] = dist[edge.u] + edge.weight
 
-    # If a node can still be relaxed, it means that there is a negative cycle
     for edge in g.edges:
         if dist[edge.v] > dist[edge.u] + edge.weight:
             has_cycle = True
-
-    return has_cycle, dist
+    elapsed = timeit.default_timer() - start_time
+    return has_cycle, dist, elapsed
 
 if __name__ == '__main__':
     print bellman_ford(ret_random_graph(1000, 5000, 100, False))
