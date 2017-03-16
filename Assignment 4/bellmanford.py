@@ -1,6 +1,10 @@
 #!/usr/bin/env python
+import math
 import random
 import timeit
+
+import pandas as pd
+import seaborn as sns
 
 MAX = float('Inf')
 
@@ -24,6 +28,13 @@ def ret_random_graph(v, e, weight, neg=True):
     """
     allowed_weights = list(range(-1*weight, weight+1)) if neg else list(range(0, weight+1))
     allowed_weights.remove(0) # No edge of weight 0
+    if e > v*(v-1):
+        e = v*(v-1)
+    if v == 1:
+        v = 2
+    if e < 2*v:
+        e = 2*v
+    print v, e
     V = [i for i in xrange(0, v)]
     E = []
     for node in V:
@@ -60,5 +71,36 @@ def bellman_ford(g, source=0):
     elapsed = timeit.default_timer() - start_time
     return has_cycle, dist, elapsed
 
+def print_graph():
+    X = []
+    Y = []
+    # for i in [100, 600, 1100, 1600, 2100, 2600, 3100, 3600, 4100, 4600, 5100]:
+    for i in [5000]:
+        # for _ in range(3):
+        for _ in range(35):
+            v = int(math.floor(random.random()*i))
+            e = int(math.floor(random.random()*(5*v-2*v)+2*v))
+            print _, v, e
+            neg = True if random.random() < 0.5 else False
+            weight = 100
+            has_cycle, dist, y = bellman_ford(ret_random_graph(v, e, weight, neg))
+            X.append(v*e)
+            Y.append(y)
+    
+    with open('data.txt', 'w') as f:
+        f.write('|V|*|E| Time\n')
+        for i in range(len(X)):
+            f.write("%s %s\n" % (str(X[i]), str(Y[i])))
+    
+    # Fit linear regression line
+    l = pd.DataFrame({
+        '|V|*|E|':X,
+        'Time':Y
+    })
+    plot = sns.lmplot('|V|*|E|', 'Time', l, ci=0)
+    sns.plt.show() # This will show the plot, click save to save. Couldn't automate this.
+    # (plot.get_figure()).savefig("linear_regression.png")
+
 if __name__ == '__main__':
-    print bellman_ford(ret_random_graph(1000, 5000, 100, False))
+    # print bellman_ford(ret_random_graph(1000, 5000, 100, False))
+    print_graph()
