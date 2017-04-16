@@ -48,7 +48,7 @@ def ch_graham(points):
                 del pts[i]
             elif dist(pts[i]) > dist(pts[i-1]):
                 del pts[i-1]
-    print len(pts)
+    # print len(pts)
 
     ch = []
     for p in pts:
